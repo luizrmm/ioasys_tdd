@@ -1,0 +1,10 @@
+{
+    "investor": { 
+       "id": 1,
+       "investor_name": "test name",
+       "email": "test@email.com",
+       "city": "testcity",
+       "country": "testcountry",
+       "balance": 1000.0
+     }
+   }
