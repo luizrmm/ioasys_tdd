@@ -33,6 +33,7 @@ dependencies:
   mocktail: ^0.1.4
   http: ^0.13.3
   flutter_bloc: ^7.0.1
+  bloc_test: ^8.0.2
 
 dev_dependencies:
   flutter_test:
