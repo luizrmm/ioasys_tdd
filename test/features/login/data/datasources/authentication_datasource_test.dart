@@ -62,7 +62,7 @@ void main() {
       setUpMockHttpClientSuccess200();
       // act
       final result = await datasource.authenticate(tEmail, tPassword);
-      print(result.toJson());
+
       // assert
       expect(result, equals(tAuthenticatedUserModel));
     });

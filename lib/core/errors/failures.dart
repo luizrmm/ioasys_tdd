@@ -6,3 +6,5 @@ abstract class Failure extends Equatable {
 }
 
 class AuthenticationFailure extends Failure {}
+
+class GetAllEnterpriseFailure extends Failure {}
