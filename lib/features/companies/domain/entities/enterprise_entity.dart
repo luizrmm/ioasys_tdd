@@ -9,7 +9,7 @@ class EnterpriseEntity extends Equatable {
   final String twitter;
   final String linkedin;
   final String phone;
-  final bool ownEnterprise;
+  final bool? ownEnterprise;
   final String photo;
   final num value;
   final int shares;
