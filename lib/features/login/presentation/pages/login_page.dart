@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ioasys_tdd/features/companies/presentation/pages/company_page.dart';
 import 'package:ioasys_tdd/features/login/presentation/bloc/authentication_bloc.dart';
 import 'package:ioasys_tdd/features/login/presentation/widgets/widgets.dart';
 import 'package:ioasys_tdd/injection_container.dart';
@@ -11,6 +12,7 @@ class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Color(0xFFF5F5F5),
       body: buildBody(context),
     );
@@ -31,7 +33,9 @@ class Login extends StatelessWidget {
               if (state is AuthenticationLoaded) {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Container()),
+                  MaterialPageRoute(
+                    builder: (context) => Company(),
+                  ),
                 );
               }
             },
@@ -41,6 +45,7 @@ class Login extends StatelessWidget {
                   message: '',
                 );
               } else if (state is AuthenticationError) {
+                print(state.runtimeType);
                 return FormBody(
                   message: state.message,
                 );

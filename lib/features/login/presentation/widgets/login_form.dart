@@ -14,10 +14,27 @@ class FormBody extends StatefulWidget {
 }
 
 class _FormBodyState extends State<FormBody> {
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  late String email;
-  late String password;
+  late final TextEditingController emailController;
+  late final TextEditingController passwordController;
+  late final FocusNode passwordFocusNode;
+  @override
+  void initState() {
+    emailController = TextEditingController();
+    passwordController = TextEditingController();
+
+    passwordFocusNode = FocusNode();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+
+    passwordFocusNode.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -28,13 +45,15 @@ class _FormBodyState extends State<FormBody> {
           Text('Email'),
           TextField(
             decoration: InputDecoration(
-                filled: true,
-                fillColor: Color(0xFFE5E5E5),
-                border: InputBorder.none),
-            controller: emailController,
-            onChanged: (value) {
-              email = value;
+              filled: true,
+              fillColor: Color(0xFFE5E5E5),
+              border: InputBorder.none,
+            ),
+            textInputAction: TextInputAction.next,
+            onEditingComplete: () {
+              FocusScope.of(context).requestFocus(passwordFocusNode);
             },
+            controller: emailController,
           ),
           Padding(
             padding: const EdgeInsets.only(top: 16.0),
@@ -45,11 +64,13 @@ class _FormBodyState extends State<FormBody> {
               filled: true,
               fillColor: Color(0xFFE5E5E5),
               border: InputBorder.none,
+              errorBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.red),
+              ),
             ),
+            focusNode: passwordFocusNode,
+            obscureText: true,
             controller: passwordController,
-            onChanged: (value) {
-              password = value;
-            },
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 32.0),
@@ -79,10 +100,10 @@ class _FormBodyState extends State<FormBody> {
   }
 
   void dispatchAuthenticate() {
+    BlocProvider.of<AuthenticationBloc>(context).add(
+      Authenticate(emailController.text, passwordController.text),
+    );
     emailController.clear();
     passwordController.clear();
-    BlocProvider.of<AuthenticationBloc>(context).add(
-      Authenticate(email, password),
-    );
   }
 }
