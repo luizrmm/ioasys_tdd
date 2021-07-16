@@ -75,6 +75,4 @@ void main() {
       expect(result, enterprises);
     });
   });
-
-  // todo: test to json
 }

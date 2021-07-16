@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:ioasys_tdd/core/errors/exceptions.dart';
+import 'package:ioasys_tdd/data/authenticated_http_client.dart';
 import 'package:ioasys_tdd/features/companies/data/models/enterprise_model.dart';
-import 'package:http/http.dart' show Client;
 
 abstract class EnterpriseDataSource {
   /// calls the enterprises endpoint
@@ -12,7 +12,7 @@ abstract class EnterpriseDataSource {
 }
 
 class EnterpriseDataSourceImpl extends EnterpriseDataSource {
-  final Client client;
+  final AuthenticatedHttpClient client;
 
   EnterpriseDataSourceImpl({required this.client});
   @override
