@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ioasys_tdd/features/companies/presentation/bloc/companies_bloc.dart';
 import 'package:ioasys_tdd/features/companies/presentation/pages/company_page.dart';
 import 'package:ioasys_tdd/features/login/presentation/bloc/authentication_bloc.dart';
 import 'package:ioasys_tdd/features/login/presentation/widgets/widgets.dart';
@@ -34,7 +35,11 @@ class Login extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => Company(),
+                    builder: (context) => BlocProvider(
+                      create: (_) =>
+                          sl<CompaniesBloc>()..add(GetAllEnterprisesEvent()),
+                      child: Company(),
+                    ),
                   ),
                 );
               }
@@ -45,7 +50,6 @@ class Login extends StatelessWidget {
                   message: '',
                 );
               } else if (state is AuthenticationError) {
-                print(state.runtimeType);
                 return FormBody(
                   message: state.message,
                 );

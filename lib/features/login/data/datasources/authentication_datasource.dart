@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:ioasys_tdd/core/errors/exceptions.dart';
+import 'package:ioasys_tdd/core/external/headers_local_manager.dart';
 import 'package:ioasys_tdd/features/login/data/models/authenticated_user_model.dart';
 import 'package:http/http.dart' show Client;
 
@@ -13,8 +14,11 @@ abstract class AuthenticationDataSource {
 
 class AuthenticationDataSourceImpl implements AuthenticationDataSource {
   final Client client;
+  final AuthHeadersManager headersManager;
 
-  AuthenticationDataSourceImpl({required this.client});
+  AuthenticationDataSourceImpl(
+      {required this.client, required this.headersManager});
+
   @override
   Future<AuthenticatedUserModel> authenticate(
       String email, String password) async {
@@ -26,6 +30,7 @@ class AuthenticationDataSourceImpl implements AuthenticationDataSource {
       body: jsonEncode({"email": email, "password": password}),
     );
     if (response.statusCode == 200) {
+      await headersManager.saveHeaders(response.headers);
       return AuthenticatedUserModel.fromJson(jsonDecode(response.body));
     } else {
       throw AuthenticationException();

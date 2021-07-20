@@ -1,8 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:ioasys_tdd/core/external/authenticated_http_client.dart';
 import 'package:ioasys_tdd/core/errors/exceptions.dart';
-import 'package:ioasys_tdd/data/authenticated_http_client.dart';
+
 import 'package:ioasys_tdd/features/companies/data/datasource/enterprise_datasource.dart';
 import 'package:ioasys_tdd/features/companies/data/models/enterprise_model.dart';
 import 'package:mocktail/mocktail.dart';

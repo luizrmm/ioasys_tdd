@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' show Client, Response;
 import 'package:ioasys_tdd/core/errors/exceptions.dart';
+import 'package:ioasys_tdd/core/external/headers_local_manager.dart';
 import 'package:ioasys_tdd/features/login/data/datasources/authentication_datasource.dart';
 import 'package:ioasys_tdd/features/login/data/models/authenticated_user_model.dart';
 import 'package:mocktail/mocktail.dart';
@@ -11,13 +12,18 @@ import '../../../../fixtures/fixture_reader.dart';
 
 class MockHttpClient extends Mock implements Client {}
 
+class MockAuthHeadersManager extends Mock implements AuthHeadersManager {}
+
 void main() {
   late MockHttpClient mockHttpClient;
+  late MockAuthHeadersManager mockAuthHeadersManager;
   late AuthenticationDataSourceImpl datasource;
 
   setUp(() {
     mockHttpClient = MockHttpClient();
-    datasource = AuthenticationDataSourceImpl(client: mockHttpClient);
+    mockAuthHeadersManager = MockAuthHeadersManager();
+    datasource = AuthenticationDataSourceImpl(
+        client: mockHttpClient, headersManager: mockAuthHeadersManager);
     registerFallbackValue(
       Uri.parse('https://empresas.ioasys.com.br/api/v1/users/auth/sign_in'),
     );
@@ -27,6 +33,10 @@ void main() {
             headers: any(named: 'headers'), body: any(named: 'body')))
         .thenAnswer(
             (_) async => Response(fixture('authenticated_user.json'), 200));
+
+    //With null safety is necessary provide a stub value to Future<void> functions
+    when(() => mockAuthHeadersManager.saveHeaders(any()))
+        .thenAnswer((_) => Future.value());
   }
 
   group('AuthenticateUser', () {
