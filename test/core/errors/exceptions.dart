@@ -1,1 +1,0 @@
-class AuthenticationException implements Exception {}

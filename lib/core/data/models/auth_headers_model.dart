@@ -1,4 +1,6 @@
-class AuthHeadersModel {
+import 'package:equatable/equatable.dart';
+
+class AuthHeadersModel extends Equatable {
   final String uid;
   final String client;
   final String accessToken;
@@ -20,4 +22,7 @@ class AuthHeadersModel {
     data['access-token'] = this.accessToken;
     return data;
   }
+
+  @override
+  List<Object?> get props => [uid, client, accessToken];
 }

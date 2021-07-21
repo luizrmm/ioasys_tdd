@@ -35,7 +35,7 @@ void main() {
   group('toJson', () {
     test(
       'should return a JSON map containing the proper data',
-      () async {
+      () {
         // act
         final result = tAuthenticatedModel.toJson();
         // assert
