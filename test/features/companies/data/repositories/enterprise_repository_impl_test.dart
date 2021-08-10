@@ -100,4 +100,39 @@ void main() {
       verifyNoMoreInteractions(mockEnterpriseDataSource);
     });
   });
+
+  group('Search Enterprises', () {
+    final String tEnterpriseName = "Little";
+    test(
+        'should return remote data when the call to remote data source is successful',
+        () async {
+      // arrange
+      when(() => mockEnterpriseDataSource.searchEnterprises(tEnterpriseName))
+          .thenAnswer((invocation) async => enterprises);
+
+      // actual
+      final result = await repositoryImpl.searchEnterprise(tEnterpriseName);
+
+      //assert
+      verify(() => mockEnterpriseDataSource.searchEnterprises(tEnterpriseName));
+      expect(result, equals(Right(enterprises)));
+      verifyNoMoreInteractions(mockEnterpriseDataSource);
+    });
+
+    test(
+        'should return a SearchEnterprisesFailure when the call to remote data source is unuccessful',
+        () async {
+      //arrange
+      when(() => mockEnterpriseDataSource.searchEnterprises(tEnterpriseName))
+          .thenThrow(SearchEnterprisesException());
+
+      // actual
+      final result = await repositoryImpl.searchEnterprise(tEnterpriseName);
+
+      // assert
+      verify(() => mockEnterpriseDataSource.searchEnterprises(tEnterpriseName));
+      expect(result, equals(Left(SearchEnterpriseFailure())));
+      verifyNoMoreInteractions(mockEnterpriseDataSource);
+    });
+  });
 }

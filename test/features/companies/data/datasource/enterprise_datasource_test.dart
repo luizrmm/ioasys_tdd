@@ -16,6 +16,7 @@ class MockHttpClient extends Mock implements AuthenticatedHttpClient {}
 void main() {
   late MockHttpClient mockHttpClient;
   late EnterpriseDataSourceImpl datasource;
+  final String enterpriseName = 'teste';
 
   setUp(() {
     mockHttpClient = MockHttpClient();
@@ -23,6 +24,8 @@ void main() {
     registerFallbackValue(
       Uri.parse('https://empresas.ioasys.com.br/api/v1/enterprises'),
     );
+    registerFallbackValue(Uri.parse(
+        'https://empresas.ioasys.com.br/api/v1/enterprises?name=$enterpriseName'));
   });
 
   void setUpMockHttpClientSuccess200() {
@@ -73,6 +76,54 @@ void main() {
       expect(
         () => call(),
         throwsA(isA<GetAllEnterpriseException>()),
+      );
+    });
+  });
+
+  group('Search Enterprises', () {
+    final Map<String, dynamic> jsonMap =
+        jsonDecode(fixture('enterprises.json'));
+    final enterprisesList = jsonMap['enterprises'] as List;
+
+    final tEnterprises = enterprisesList
+        .map((enterprise) => EnterpriseModel.fromJson(enterprise))
+        .toList();
+    final String tSearchedString = 'teste';
+
+    test('should perform a get request with the searchedString', () {
+      setUpMockHttpClientSuccess200();
+      // act
+      datasource.searchEnterprises(tSearchedString);
+      // assert
+      verify(
+        () => mockHttpClient.get(
+          Uri.parse(
+              'https://empresas.ioasys.com.br/api/v1/enterprises?name=$enterpriseName'),
+        ),
+      );
+    });
+
+    test('should return enterprises searched when the response code is 200(OK)',
+        () async {
+      setUpMockHttpClientSuccess200();
+      // act
+      final result = await datasource.searchEnterprises(enterpriseName);
+
+      // assert
+      expect(result, equals(tEnterprises));
+    });
+
+    test('should throw a SearchEnterprisesException when request url fails',
+        () async {
+      // arrange
+      when(() => mockHttpClient.get(any(), headers: any(named: 'headers')))
+          .thenAnswer((_) async => Response('Something went wrong', 401));
+      // act
+      final call = datasource.searchEnterprises(enterpriseName);
+      // assert
+      expect(
+        () => call,
+        throwsA(isA<SearchEnterprisesException>()),
       );
     });
   });

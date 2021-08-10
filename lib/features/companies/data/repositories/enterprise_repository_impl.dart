@@ -17,4 +17,16 @@ class EnterpriseRepositoryImpl implements EnterpriseRespository {
       return Left(GetAllEnterpriseFailure());
     }
   }
+
+  @override
+  Future<Either<Failure, List<EnterpriseEntity>>> searchEnterprise(
+      String enterpriseName) async {
+    try {
+      final filteredEnterprises =
+          await this.datasource.searchEnterprises(enterpriseName);
+      return Right(filteredEnterprises);
+    } catch (e) {
+      return Left(SearchEnterpriseFailure());
+    }
+  }
 }

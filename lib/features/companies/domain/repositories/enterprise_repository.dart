@@ -4,4 +4,6 @@ import 'package:ioasys_tdd/features/companies/domain/entities/enterprise_entity.
 
 abstract class EnterpriseRespository {
   Future<Either<Failure, List<EnterpriseEntity>>> getAll();
+  Future<Either<Failure, List<EnterpriseEntity>>> searchEnterprise(
+      String enterpriseName);
 }
